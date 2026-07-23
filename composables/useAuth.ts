@@ -3,8 +3,9 @@ export const useAuth = () => {
   const user = useSupabaseUser()
   const profile = useState('profile', () => null)
 
-  const fetchProfile = async () => {
-    if (!user.value) {
+  const fetchProfile = async (userId?: string) => {
+    const id = userId ?? user.value?.id
+    if (!id) {
       profile.value = null
       return
     }
@@ -12,7 +13,7 @@ export const useAuth = () => {
     const { data, error } = await client
       .from('profiles')
       .select('*')
-      .eq('id', user.value.id)
+      .eq('id', id)
       .single()
 
     if (error) {
@@ -29,7 +30,7 @@ export const useAuth = () => {
       password,
     })
     if (error) throw error
-    await fetchProfile()
+    await fetchProfile(data.user?.id)
     return data
   }
 

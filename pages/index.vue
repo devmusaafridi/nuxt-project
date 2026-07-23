@@ -6,11 +6,13 @@ const loading = ref(false)
 const errorMsg = ref('')
 
 const handleLogin = async () => {
-  loading.ref = true
+  loading.value = true
   errorMsg.value = ''
   try {
     await login(email.value, password.value)
-    // Redirection is handled by the global middleware
+    if (profile.value?.role === 'super_admin') await navigateTo('/admin')
+    else if (profile.value?.role === 'user') await navigateTo('/user/dashboard')
+    else if (profile.value?.role === 'visitor') await navigateTo('/visitor')
   } catch (err) {
     errorMsg.value = err.message || 'Login failed'
   } finally {

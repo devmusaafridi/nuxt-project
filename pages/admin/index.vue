@@ -24,14 +24,54 @@ onMounted(fetchProjects)
 
 // Overall Summary (calculated from projects)
 const totalCapital = computed(() => projects.value.reduce((sum, p) => sum + (p.capital_allocated || 0), 0))
-// ... more aggregations will be added later when modules are ready
+
+// Create Project
+const showModal = ref(false)
+const users = ref([])
+const newProject = reactive({ name: '', capital_allocated: '', assigned_user: '' })
+const creating = ref(false)
+
+const fetchUsers = async () => {
+  const { data, error } = await client
+    .from('profiles')
+    .select('id, username')
+    .eq('role', 'user')
+  if (!error) users.value = data
+}
+
+const openModal = async () => {
+  await fetchUsers()
+  showModal.value = true
+}
+
+const createProject = async () => {
+  creating.value = true
+  try {
+    const payload = {
+      name: newProject.name,
+      capital_allocated: Number(newProject.capital_allocated),
+      ...(newProject.assigned_user ? { assigned_user: newProject.assigned_user } : {})
+    }
+    const { error } = await client.from('projects').insert(payload)
+    if (error) throw error
+    showModal.value = false
+    newProject.name = ''
+    newProject.capital_allocated = ''
+    newProject.assigned_user = ''
+    await fetchProjects()
+  } catch (err) {
+    alert(err.message)
+  } finally {
+    creating.value = false
+  }
+}
 </script>
 
 <template>
   <div>
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-800">Project Overview</h2>
-      <button class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition">
+      <button @click="openModal" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition">
         + New Project
       </button>
     </div>
@@ -85,6 +125,36 @@ const totalCapital = computed(() => projects.value.reduce((sum, p) => sum + (p.c
           </NuxtLink>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Create Project Modal -->
+  <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-lg p-6 max-w-md w-full">
+      <h3 class="text-lg font-bold mb-4">Create New Project</h3>
+      <form @submit.prevent="createProject" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Project Name</label>
+          <input v-model="newProject.name" type="text" required class="mt-1 block w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Capital Allocated (Rs.)</label>
+          <input v-model="newProject.capital_allocated" type="number" min="0" required class="mt-1 block w-full border rounded p-2" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Assign User</label>
+          <select v-model="newProject.assigned_user" class="mt-1 block w-full border rounded p-2">
+            <option value="">— Unassigned —</option>
+            <option v-for="u in users" :key="u.id" :value="u.id">{{ u.username }}</option>
+          </select>
+        </div>
+        <div class="flex justify-end space-x-3 mt-6">
+          <button @click="showModal = false" type="button" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded">Cancel</button>
+          <button type="submit" :disabled="creating" class="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50">
+            {{ creating ? 'Creating...' : 'Create' }}
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </template>

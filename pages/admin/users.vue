@@ -21,39 +21,35 @@ const fetchUsers = async () => {
     .from('profiles')
     .select('*')
     .neq('role', 'super_admin')
-  if (error) console.error(error)
-  else users.value = data
+  if (error) console.error('[fetchUsers] error:', error)
+  else {
+    console.log('[fetchUsers] data:', data)
+    users.value = data
+  }
   loading.value = false
 }
 
 const createUser = async () => {
   try {
-    // Note: In a real app, you might want to use a service role or a cloud function 
-    // to create users in Auth without logging out. 
-    // For this prototype, we'll assume a simplified flow or manual auth entry for now.
-    // Or we use the sign-up method which might log us out.
-    
-    // Simplified: Just insert into profiles for now to show UI intent
-    // In production, use Supabase Admin API
-    const { data, error } = await client.auth.signUp({
-      email: newUser.email,
-      password: newUser.password,
-      options: {
-        data: {
-          username: newUser.username,
-          role: newUser.role
-        }
+    await $fetch('/api/create-user', {
+      method: 'POST',
+      body: {
+        email: newUser.email,
+        password: newUser.password,
+        username: newUser.username,
+        role: newUser.role
       }
     })
 
-    if (error) throw error
-    
-    // The profile trigger should handle the profile insertion
     alert('User created successfully!')
     showModal.value = false
+    newUser.email = ''
+    newUser.password = ''
+    newUser.username = ''
+    newUser.role = 'user'
     fetchUsers()
   } catch (err) {
-    alert(err.message)
+    alert(err?.data?.message ?? err?.message)
   }
 }
 

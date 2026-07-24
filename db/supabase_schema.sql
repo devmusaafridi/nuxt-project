@@ -6,6 +6,31 @@ CREATE TABLE profiles (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Trigger: auto-insert into profiles when a new auth user is created
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+DECLARE
+  user_role TEXT;
+BEGIN
+  user_role := COALESCE(NEW.raw_user_meta_data->>'role', 'user');
+  IF user_role NOT IN ('super_admin', 'user', 'visitor') THEN
+    user_role := 'user';
+  END IF;
+
+  INSERT INTO public.profiles (id, username, role)
+  VALUES (
+    NEW.id,
+    NEW.raw_user_meta_data->>'username',
+    user_role
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE OR REPLACE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
 -- Projects table
 CREATE TABLE projects (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,

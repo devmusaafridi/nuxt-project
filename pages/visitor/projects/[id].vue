@@ -16,13 +16,25 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-100 flex flex-col">
-    <header class="bg-gray-800 text-white shadow-md py-4 px-6 flex justify-between items-center">
-      <h1 class="text-xl font-bold">Zam Zam Gold Mine - Visitor Portal</h1>
-      <NuxtLink to="/visitor" class="text-sm text-gray-300 hover:text-white transition">← Back to Projects</NuxtLink>
+  <div class="min-h-screen flex flex-col" style="background:#f3f4f6;">
+    <header class="relative overflow-hidden flex-shrink-0" style="background:#0d0d0d; min-height:80px;">
+      <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('/mine-design.jpeg'); opacity:0.2;"></div>
+      <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);"></div>
+      <div class="relative z-10 flex items-center justify-between px-8 py-4">
+        <div class="flex items-center space-x-4">
+          <img src="/mine-logo.jpeg" alt="Zam Zam Gold Mine" class="w-12 h-12 object-contain" />
+          <div>
+            <h1 class="text-white font-bold text-lg leading-tight">Zam Zam Gold Mine</h1>
+            <p class="text-xs uppercase tracking-widest" style="color:#d4a017;">Management System</p>
+          </div>
+        </div>
+        <NuxtLink to="/visitor" class="text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-400 px-3 py-1.5 rounded-md transition">
+          ← Back to Projects
+        </NuxtLink>
+      </div>
     </header>
 
-    <main class="flex-grow p-6 overflow-auto">
+    <main class="flex-grow p-8 overflow-auto">
       <div v-if="loading" class="flex justify-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
       </div>

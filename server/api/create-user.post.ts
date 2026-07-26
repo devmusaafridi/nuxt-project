@@ -29,14 +29,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Step 2: Insert into profiles directly
+  // Step 2: Upsert into profiles — handles both the case where no trigger exists
+  // and the case where a trigger already created a partial row (duplicate key).
   const profileResponse = await fetch(`${supabaseUrl}/rest/v1/profiles`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'apikey': serviceKey,
       'Authorization': `Bearer ${serviceKey}`,
-      'Prefer': 'return=minimal'
+      'Prefer': 'resolution=merge-duplicates,return=minimal'
     },
     body: JSON.stringify({
       id: authResult.id,
@@ -47,15 +48,11 @@ export default defineEventHandler(async (event) => {
 
   if (!profileResponse.ok) {
     const profileError = await profileResponse.json().catch(() => ({}))
-    console.error('[create-user] profile insert failed:', JSON.stringify(profileError))
-
-    // Ignore duplicate key (trigger already inserted it)
-    if (profileError?.code !== '23505') {
-      throw createError({
-        statusCode: 500,
-        message: `Profile insert failed: ${profileError?.message || profileError?.details || JSON.stringify(profileError)}`
-      })
-    }
+    console.error('[create-user] profile upsert failed:', JSON.stringify(profileError))
+    throw createError({
+      statusCode: 500,
+      message: `Profile upsert failed: ${profileError?.message || profileError?.details || JSON.stringify(profileError)}`
+    })
   }
 
   return { user: authResult }

@@ -13,6 +13,7 @@ const handleLogin = async () => {
     if (profile.value?.role === 'super_admin') await navigateTo('/admin')
     else if (profile.value?.role === 'user') await navigateTo('/user/dashboard')
     else if (profile.value?.role === 'visitor') await navigateTo('/visitor')
+    else errorMsg.value = 'Account not found or not set up. Please contact your administrator.'
   } catch (err) {
     errorMsg.value = err.message || 'Login failed'
   } finally {

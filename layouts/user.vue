@@ -39,10 +39,14 @@
     <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
       <header class="h-16 border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0">
         <h2 class="text-lg font-bold text-gray-800 capitalize">{{ activeModuleName }}</h2>
-        <div class="flex items-center space-x-4">
+        <div class="flex items-center space-x-6">
+          <div class="text-right">
+            <p class="text-xs text-gray-500">Project</p>
+            <p class="text-sm font-medium text-gray-700">{{ projectNames }}</p>
+          </div>
           <div class="text-right">
             <p class="text-xs text-gray-500">Available Balance</p>
-            <p class="text-sm font-bold text-green-600">Rs. 1,250,000</p>
+            <p class="text-sm font-bold text-green-600">Rs. {{ availableBalance.toLocaleString() }}</p>
           </div>
         </div>
       </header>
@@ -55,9 +59,28 @@
 </template>
 
 <script setup>
-const props = defineProps(['activeModule', 'menuItems'])
+const props = defineProps({
+  activeModule: { type: String, default: '' },
+  menuItems: { type: Array, default: () => [] }
+})
 const emit = defineEmits(['select-module'])
 const { profile, logout } = useAuth()
+
+const projects = ref([])
+const availableBalance = computed(() =>
+  projects.value.reduce((sum, p) => sum + (p.capital_allocated || 0), 0)
+)
+const projectNames = computed(() =>
+  projects.value.map(p => p.name).join(', ') || 'No project assigned'
+)
+
+onMounted(async () => {
+  try {
+    projects.value = await $fetch('/api/my-project')
+  } catch (err) {
+    console.error('[user layout] failed to load project:', err?.data?.message ?? err?.message ?? err)
+  }
+})
 
 const activeModuleName = computed(() => {
   return props.menuItems.find(i => i.id === props.activeModule)?.name || 'Dashboard'

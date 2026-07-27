@@ -72,6 +72,12 @@ onMounted(async () => {
 
       <!-- Full interactive worker module for admin -->
       <UserWorkerModule :projectId="project.id" />
+
+      <!-- Full interactive truck module for admin -->
+      <div class="mt-8">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Truck Module</h3>
+        <UserTruckModule :projectId="project.id" />
+      </div>
     </div>
   </div>
 </template>

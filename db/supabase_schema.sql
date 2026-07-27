@@ -67,11 +67,13 @@ CREATE TABLE trucks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   owner_name TEXT NOT NULL,
+  owner_mobile_number TEXT,
   picture_url TEXT,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+  created_by UUID REFERENCES profiles(id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
 
--- Truck Drivers
+-- Truck Drivers (replaceable — history retained, only one is_active per truck)
 CREATE TABLE truck_drivers (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   truck_id UUID REFERENCES trucks(id) ON DELETE CASCADE NOT NULL,
@@ -79,16 +81,16 @@ CREATE TABLE truck_drivers (
   picture_url TEXT,
   cnic_picture_url TEXT,
   mobile_number TEXT,
-  is_active BOOLEAN DEFAULT true,
+  is_active BOOLEAN DEFAULT true NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
--- Truck Attendance
+-- Truck Daily Attendance (Yes/No)
 CREATE TABLE truck_attendance (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   truck_id UUID REFERENCES trucks(id) ON DELETE CASCADE NOT NULL,
   date DATE NOT NULL,
-  present BOOLEAN DEFAULT true NOT NULL,
+  present BOOLEAN NOT NULL DEFAULT true,
   UNIQUE(truck_id, date)
 );
 

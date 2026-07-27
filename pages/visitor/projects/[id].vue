@@ -77,6 +77,12 @@ onMounted(async () => {
 
         <!-- Read-only Worker Module -->
         <UserWorkerModule :projectId="project.id" :readonly="true" />
+
+        <!-- Read-only Truck Module -->
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Truck Module</h3>
+          <UserTruckModule :projectId="project.id" :readonly="true" />
+        </div>
       </div>
     </main>
   </div>

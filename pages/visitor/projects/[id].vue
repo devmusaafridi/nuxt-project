@@ -22,7 +22,7 @@ onMounted(async () => {
       <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);"></div>
       <div class="relative z-10 flex items-center justify-between px-8 py-4">
         <div class="flex items-center space-x-4">
-          <img src="/sidebar-logo.jpg" alt="Zam Zam Gold Mine" class="w-12 h-12 object-contain" />
+          <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-30 h-28 object-contain" />
           <div>
             <h1 class="text-white font-bold text-lg leading-tight">Zam Zam Gold Mine</h1>
             <p class="text-xs uppercase tracking-widest" style="color:#d4a017;">Management System</p>

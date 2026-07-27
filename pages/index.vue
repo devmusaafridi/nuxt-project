@@ -24,7 +24,14 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <div class="min-h-screen flex">
+  <div class="min-h-screen flex relative">
+
+    <!-- Mobile background image (shown only below lg) -->
+    <div
+      class="lg:hidden absolute inset-0 bg-cover bg-center bg-no-repeat"
+      style="background-image: url('/mine-design.jpeg');"
+    ></div>
+    <div class="lg:hidden absolute inset-0 bg-black/60"></div>
 
     <!-- Left Panel — background image + branding -->
     <div
@@ -42,21 +49,21 @@ const handleLogin = async () => {
 
       <!-- Branding content -->
       <div class="relative z-10 flex flex-col item-start text-center">
-        <img src="/main-logo.jpg" alt="Zam Zam Gold Mine" class="w-50 h-48 object-contain mb-6 drop-shadow-2xl" />
+        <img src="/main-logo.png" alt="Zam Zam Gold Mine" class="w-50 h-50 object-contain mb-6 drop-shadow-2xl" />
       </div>
     </div>
 
     <!-- Right Panel — login form -->
-    <div class="w-full lg:w-1/2 flex items-center justify-center bg-white p-8">
-      <div class="w-full max-w-md">
+    <div class="relative z-10 w-full lg:w-1/2 flex items-center justify-center bg-transparent lg:bg-white p-6 lg:p-8">
+      <div class="w-full max-w-md rounded-2xl shadow-xl p-6 lg:bg-transparent lg:shadow-none lg:backdrop-blur-none lg:p-0">
 
         <!-- Mobile logo -->
-        <div class="lg:hidden flex justify-center mb-8">
-          <img src="/main-logo.jpg" alt="Zam Zam Gold Mine" class="w-28 h-28 object-contain" />
+        <div class="lg:hidden flex justify-center mb-2">
+          <img src="/main-logo.png" alt="Zam Zam Gold Mine" class="w-48 h-40 object-contain" />
         </div>
 
-        <h2 class="text-3xl font-bold text-gray-900 mb-1">Welcome Back!</h2>
-        <p class="text-gray-500 text-sm mb-8">Sign in to your account</p>
+        <h2 class="hidden lg:block text-3xl font-bold text-gray-400 lg:text-gray-900 mb-1">Welcome Back!</h2>
+        <p class="text-gray-400 text-sm mb-8 text-center lg:text-left">Sign in to your account</p>
 
         <form @submit.prevent="handleLogin" class="space-y-5">
 

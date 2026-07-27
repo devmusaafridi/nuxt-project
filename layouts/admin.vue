@@ -1,10 +1,12 @@
 <template>
   <div class="min-h-screen bg-gray-100 flex flex-col">
     <!-- Header -->
-    <header class="bg-yellow-600 text-white shadow-md py-4 px-6 flex justify-between items-center">
-      <h1 class="text-xl font-bold">Zam Zam Gold Mine - Super Admin</h1>
+    <header class="bg-[#000] text-white shadow-md px-6 flex justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-30 h-20 object-contain" />
+      </div>
+      <h1 class="text-xl font-bold text-yellow-400">Super Admin</h1>
       <div class="flex items-center space-x-4">
-        <span>Admin</span>
         <button @click="logout" class="bg-yellow-700 hover:bg-yellow-800 px-3 py-1 rounded text-sm transition">
           Logout
         </button>

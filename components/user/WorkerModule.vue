@@ -5,10 +5,13 @@ const props = defineProps({
 })
 
 const todayISO = new Date().toISOString().split('T')[0]
+const selectedDate = ref(todayISO)
+const isToday = computed(() => selectedDate.value === todayISO)
 
 const workers = ref([])
 const attendance = ref([])
 const loadingWorkers = ref(true)
+const loadingAttendance = ref(false)
 const savingAttendance = ref({}) // { [workerId]: 'day'|'night'|'leave'|null }
 
 // ── Summary ──────────────────────────────────────────────
@@ -51,15 +54,22 @@ const fetchWorkers = async () => {
 }
 
 const fetchAttendance = async () => {
+  loadingAttendance.value = true
   try {
-    attendance.value = await $fetch('/api/attendance', { query: { projectId: props.projectId, date: todayISO } })
+    attendance.value = await $fetch('/api/attendance', { query: { projectId: props.projectId, date: selectedDate.value } })
   } catch (err) {
     console.error('Failed to load attendance:', err)
+  } finally {
+    loadingAttendance.value = false
   }
 }
 
 onMounted(async () => {
   await Promise.all([fetchWorkers(), fetchAttendance()])
+})
+
+watch(selectedDate, () => {
+  fetchAttendance()
 })
 
 // ── Mark attendance ───────────────────────────────────────
@@ -68,7 +78,7 @@ const markAttendance = async (worker, status) => {
   try {
     await $fetch('/api/attendance', {
       method: 'POST',
-      body: { worker_id: worker.id, project_id: props.projectId, date: todayISO, status }
+      body: { worker_id: worker.id, date: selectedDate.value, status }
     })
     await fetchAttendance()
   } catch (err) {
@@ -164,7 +174,7 @@ const deleteWorker = async (worker) => {
         <p class="text-2xl font-bold text-green-600">{{ activeWorkers.length }}</p>
       </div>
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
-        <p class="text-xs text-gray-500 uppercase font-bold mb-1">Present Today</p>
+        <p class="text-xs text-gray-500 uppercase font-bold mb-1">{{ isToday ? 'Present Today' : `Present on ${selectedDate}` }}</p>
         <p class="text-2xl font-bold text-blue-600">{{ presentToday.length }}</p>
       </div>
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
@@ -182,9 +192,30 @@ const deleteWorker = async (worker) => {
 
       <!-- Attendance Panel -->
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <h4 class="font-bold text-gray-700 mb-4">Daily Attendance — {{ todayISO }}</h4>
+        <div class="flex items-center justify-between mb-4 gap-3">
+          <h4 class="font-bold text-gray-700">{{ isToday ? 'Daily Attendance' : 'Attendance History' }}</h4>
+          <div class="flex items-center gap-2">
+            <input
+              v-model="selectedDate"
+              type="date"
+              :max="todayISO"
+              class="border rounded p-1.5 text-sm"
+            />
+            <button
+              v-if="!isToday"
+              @click="selectedDate = todayISO"
+              class="text-xs text-yellow-700 hover:underline whitespace-nowrap"
+            >
+              Today
+            </button>
+          </div>
+        </div>
 
-        <div v-if="activeWorkers.length === 0" class="text-center py-8 text-gray-400 text-sm italic">
+        <div v-if="loadingAttendance" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600"></div>
+        </div>
+
+        <div v-else-if="activeWorkers.length === 0" class="text-center py-8 text-gray-400 text-sm italic">
           No active workers. Add workers first.
         </div>
 
@@ -207,14 +238,14 @@ const deleteWorker = async (worker) => {
               </div>
             </div>
             <div class="flex space-x-1 flex-shrink-0">
-              <!-- Read-only badge -->
+              <!-- Read-only badge (past dates are history, not editable) -->
               <span
-                v-if="readonly"
+                v-if="readonly || !isToday"
                 :class="['text-xs px-2 py-1 rounded border font-medium', attendanceBadge(getAttendance(worker.id)?.status)]"
               >
                 {{ attendanceLabel(getAttendance(worker.id)?.status) }}
               </span>
-              <!-- Editable buttons -->
+              <!-- Editable buttons (today only) -->
               <template v-else>
                 <button
                   v-for="s in ['day', 'night', 'leave']"

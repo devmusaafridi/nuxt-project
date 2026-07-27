@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const serviceKey = process.env.SUPABASE_SERVICE_KEY!
 
   const response = await fetch(
-    `${supabaseUrl}/rest/v1/worker_attendance?project_id=eq.${projectId}&date=eq.${date}`,
+    `${supabaseUrl}/rest/v1/worker_attendance?select=id,worker_id,date,status,workers!inner(project_id)&workers.project_id=eq.${projectId}&date=eq.${date}`,
     {
       headers: {
         'apikey': serviceKey,

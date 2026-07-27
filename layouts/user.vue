@@ -13,7 +13,7 @@
 
       <!-- Logo -->
       <div class="relative z-10 flex flex-col items-center pt-6 pb-4 px-4 border-b border-white border-opacity-10">
-        <img src="/mine-logo.jpeg" alt="Zam Zam Gold Mine" class="w-20 h-20 object-contain mb-2" />
+        <img src="/sidebar-logo.jpg" alt="Zam Zam Gold Mine" class="w-20 h-20 object-contain mb-2" />
         <p class="text-xs text-gray-400 uppercase tracking-widest text-center leading-4">Project Portal</p>
       </div>
 

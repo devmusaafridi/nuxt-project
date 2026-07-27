@@ -42,7 +42,7 @@ const handleLogin = async () => {
 
       <!-- Branding content -->
       <div class="relative z-10 flex flex-col item-start text-center">
-        <img src="/mine-logo.jpeg" alt="Zam Zam Gold Mine" class="w-50 h-48 object-contain mb-6 drop-shadow-2xl" />
+        <img src="/main-logo.jpg" alt="Zam Zam Gold Mine" class="w-50 h-48 object-contain mb-6 drop-shadow-2xl" />
       </div>
     </div>
 
@@ -52,7 +52,7 @@ const handleLogin = async () => {
 
         <!-- Mobile logo -->
         <div class="lg:hidden flex justify-center mb-8">
-          <img src="/mine-logo.jpeg" alt="Zam Zam Gold Mine" class="w-28 h-28 object-contain" />
+          <img src="/main-logo.jpg" alt="Zam Zam Gold Mine" class="w-28 h-28 object-contain" />
         </div>
 
         <h2 class="text-3xl font-bold text-gray-900 mb-1">Welcome Back!</h2>

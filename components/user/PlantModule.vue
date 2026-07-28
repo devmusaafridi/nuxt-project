@@ -197,7 +197,7 @@ const deleteSession = async (session) => {
 
       <!-- Plant Working Hours -->
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <div class="flex items-center justify-between mb-4 gap-3">
+        <div class="flex items-center justify-between flex-wrap gap-3 gap-y-2 mb-4">
           <h4 class="font-bold text-gray-700">{{ isToday ? 'Working Hours' : 'Working Hours History' }}</h4>
           <div class="flex items-center gap-2">
             <input
@@ -230,7 +230,7 @@ const deleteSession = async (session) => {
             :key="plant.id"
             class="p-3 bg-gray-50 rounded-md"
           >
-            <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center justify-between flex-wrap gap-y-2 mb-2">
               <p class="text-sm font-bold text-gray-800 truncate mr-3">{{ plant.name }}</p>
               <div class="flex items-center gap-2 flex-shrink-0">
                 <span class="text-xs font-semibold text-gray-600">{{ totalHoursFor(plant.id).toFixed(1) }} hrs</span>

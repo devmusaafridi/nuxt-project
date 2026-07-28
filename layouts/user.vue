@@ -1,8 +1,19 @@
 <template>
   <div class="min-h-screen flex overflow-hidden" style="background:#f3f4f6;">
 
+    <!-- Mobile backdrop -->
+    <div
+      v-if="mobileMenuOpen"
+      @click="mobileMenuOpen = false"
+      class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden"
+    ></div>
+
     <!-- Sidebar -->
-    <aside class="w-64 flex flex-col flex-shrink-0 relative overflow-hidden" style="background:#0d0d0d;">
+    <aside
+      class="w-64 flex flex-col flex-shrink-0 overflow-hidden fixed inset-y-0 left-0 z-40 transition-transform duration-200 lg:relative lg:translate-x-0"
+      :class="mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'"
+      style="background:#0d0d0d;"
+    >
 
       <!-- Mine background image -->
       <div
@@ -22,7 +33,7 @@
         <button
           v-for="item in menuItems"
           :key="item.id"
-          @click="$emit('select-module', item.id)"
+          @click="selectModule(item.id)"
           class="w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition"
           :class="activeModule === item.id
             ? 'text-gray-900 font-semibold shadow-md'
@@ -60,21 +71,32 @@
     <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
 
       <!-- Top bar -->
-      <header class="h-16 border-b border-gray-200 flex items-center justify-between px-8 flex-shrink-0 bg-white">
-        <h2 class="text-lg font-bold text-gray-800 capitalize">{{ activeModuleName }}</h2>
-        <div class="flex items-center space-x-6">
-          <div class="text-right">
+      <header class="border-b border-gray-200 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-4 sm:px-8 py-3 sm:h-16 flex-shrink-0 bg-white">
+        <div class="flex items-center gap-3">
+          <button
+            @click="mobileMenuOpen = true"
+            class="lg:hidden flex-shrink-0 p-1.5 -ml-1.5 text-gray-600 hover:text-gray-900"
+            aria-label="Open menu"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h2 class="text-lg font-bold text-gray-800 capitalize truncate">{{ activeModuleName }}</h2>
+        </div>
+        <div class="flex items-center gap-4 sm:gap-6 pl-9 sm:pl-0 justify-between">
+          <div class="text-left sm:text-right">
             <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">Project</p>
-            <p class="text-sm font-medium text-gray-700">{{ projectNames }}</p>
+            <p class="text-sm font-medium text-gray-700 truncate max-w-[40vw] sm:max-w-none">{{ projectNames }}</p>
           </div>
-          <div class="text-right">
+          <div class="text-left sm:text-right">
             <p class="text-xs text-gray-400 uppercase font-semibold tracking-wide">Available Balance</p>
             <p class="text-sm font-bold text-green-600">Rs. {{ availableBalance.toLocaleString() }}</p>
           </div>
         </div>
       </header>
 
-      <div class="flex-1 overflow-y-auto p-8">
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
         <slot />
       </div>
     </main>
@@ -88,6 +110,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['select-module'])
 const { profile, logout } = useAuth()
+
+const mobileMenuOpen = ref(false)
+const selectModule = (id) => {
+  emit('select-module', id)
+  mobileMenuOpen.value = false
+}
 
 const projects = ref([])
 const availableBalance = computed(() =>

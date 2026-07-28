@@ -126,15 +126,15 @@ const confirmDelete = async () => {
 
 <template>
   <div>
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">Project Overview</h2>
-      <button @click="openCreateModal" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition">
+    <div class="flex justify-between items-center flex-wrap gap-y-2 mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Project Overview</h2>
+      <button @click="openCreateModal" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition whitespace-nowrap">
         + New Project
       </button>
     </div>
 
     <!-- Summary Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
       <div class="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500">
         <p class="text-sm text-gray-500 uppercase font-bold">Total Capital</p>
         <p class="text-2xl font-bold text-gray-800">Rs. {{ totalCapital.toLocaleString() }}</p>
@@ -165,7 +165,7 @@ const confirmDelete = async () => {
       <div v-for="project in projects" :key="project.id" class="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition">
         <div class="p-5">
           <div class="flex justify-between items-start mb-2">
-            <h3 class="text-xl font-bold text-gray-800">{{ project.name }}</h3>
+            <h3 class="text-xl font-bold text-gray-800 min-w-0 break-words">{{ project.name }}</h3>
             <div class="flex space-x-2 ml-2 flex-shrink-0">
               <button @click="openEdit(project)" class="text-xs text-yellow-600 hover:text-yellow-800 font-medium">Edit</button>
               <button @click="openDelete(project)" class="text-xs text-red-600 hover:text-red-800 font-medium">Delete</button>

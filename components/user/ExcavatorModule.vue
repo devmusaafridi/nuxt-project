@@ -303,7 +303,7 @@ const deleteSession = async (session) => {
 
       <!-- Excavator Working Hours -->
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <div class="flex items-center justify-between mb-4 gap-3">
+        <div class="flex items-center justify-between flex-wrap gap-3 gap-y-2 mb-4">
           <h4 class="font-bold text-gray-700">{{ isToday ? 'Working Hours' : 'Working Hours History' }}</h4>
           <div class="flex items-center gap-2">
             <input
@@ -336,7 +336,7 @@ const deleteSession = async (session) => {
             :key="excavator.id"
             class="p-3 bg-gray-50 rounded-md"
           >
-            <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center justify-between flex-wrap gap-y-2 mb-2">
               <div class="min-w-0 mr-3">
                 <p class="text-sm font-bold text-gray-800 truncate">{{ excavator.owner_name }}</p>
                 <p class="text-xs text-gray-500">{{ sessionsFor(excavator.id)[0]?.driver_name || excavator.driver?.driver_name || 'No driver' }}</p>
@@ -411,7 +411,7 @@ const deleteSession = async (session) => {
               </div>
             </div>
 
-            <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
+            <div class="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between flex-wrap gap-y-2">
               <div class="flex items-center space-x-3 min-w-0">
                 <img
                   v-if="excavator.driver?.picture_url"
@@ -481,7 +481,7 @@ const deleteSession = async (session) => {
 
     <!-- Excavator Driver Entry: Assign / Replace Modal -->
     <div v-if="showDriverModal && !readonly" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div class="bg-white rounded-lg p-6 max-w-md w-full">
+      <div class="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
         <h3 class="text-lg font-bold mb-1">{{ driverExcavator?.driver ? 'Replace Driver' : 'Assign Driver' }}</h3>
         <p class="text-xs text-gray-500 mb-4">Excavator owner: {{ driverExcavator?.owner_name }}</p>
         <form @submit.prevent="saveDriver" class="space-y-4">

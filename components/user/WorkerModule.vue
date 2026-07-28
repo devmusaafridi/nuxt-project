@@ -192,7 +192,7 @@ const deleteWorker = async (worker) => {
 
       <!-- Attendance Panel -->
       <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
-        <div class="flex items-center justify-between mb-4 gap-3">
+        <div class="flex items-center justify-between flex-wrap gap-3 gap-y-2 mb-4">
           <h4 class="font-bold text-gray-700">{{ isToday ? 'Daily Attendance' : 'Attendance History' }}</h4>
           <div class="flex items-center gap-2">
             <input
@@ -223,7 +223,7 @@ const deleteWorker = async (worker) => {
           <div
             v-for="worker in activeWorkers"
             :key="worker.id"
-            class="flex items-center justify-between p-3 bg-gray-50 rounded-md"
+            class="flex items-center justify-between flex-wrap gap-y-2 p-3 bg-gray-50 rounded-md"
           >
             <div class="min-w-0 mr-3">
               <p class="text-sm font-bold text-gray-800 truncate">{{ worker.name }}</p>

@@ -135,7 +135,11 @@ const handleModuleSelect = (id) => {
 
     <!-- Diesel module -->
     <div v-else-if="activeModule === 'diesel'">
-      <UserDieselModule />
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserDieselModule v-else :projectId="projects[0].id" />
     </div>
 
     <!-- Other modules -->

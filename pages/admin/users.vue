@@ -113,9 +113,9 @@ const confirmDelete = async () => {
 
 <template>
   <div>
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-bold text-gray-800">Manage Accounts</h2>
-      <button @click="showCreateModal = true" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition">
+    <div class="flex justify-between items-center flex-wrap gap-y-2 mb-6">
+      <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Manage Accounts</h2>
+      <button @click="showCreateModal = true" class="bg-yellow-600 text-white px-4 py-2 rounded-md hover:bg-yellow-700 transition whitespace-nowrap">
         + Create Account
       </button>
     </div>
@@ -124,34 +124,36 @@ const confirmDelete = async () => {
       <div v-if="loading" class="flex justify-center py-12">
         <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-yellow-600"></div>
       </div>
-      <table v-else class="min-w-full divide-y divide-gray-200">
-        <thead class="bg-gray-50">
-          <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
-            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-          </tr>
-        </thead>
-        <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-if="users.length === 0">
-            <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-400">No accounts found.</td>
-          </tr>
-          <tr v-for="user in users" :key="user.id">
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.username }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ user.role }}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              {{ new Date(user.created_at).toLocaleDateString() }}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-              <button @click="openEdit(user)" class="text-yellow-600 hover:text-yellow-900 mr-4">Edit</button>
-              <button @click="openDelete(user)" class="text-red-600 hover:text-red-900">Delete</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <div v-else class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-if="users.length === 0">
+              <td colspan="5" class="px-6 py-8 text-center text-sm text-gray-400">No accounts found.</td>
+            </tr>
+            <tr v-for="user in users" :key="user.id">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ user.username }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ user.email }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ user.role }}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                {{ new Date(user.created_at).toLocaleDateString() }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button @click="openEdit(user)" class="text-yellow-600 hover:text-yellow-900 mr-4">Edit</button>
+                <button @click="openDelete(user)" class="text-red-600 hover:text-red-900">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Create Modal -->

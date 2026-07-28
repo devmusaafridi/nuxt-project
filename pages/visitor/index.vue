@@ -28,27 +28,27 @@ onMounted(async () => {
       ></div>
       <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);"></div>
 
-      <div class="relative z-10 flex items-center justify-between px-8">
+      <div class="relative z-10 flex items-center justify-between flex-wrap gap-y-2 px-4 sm:px-8 py-3">
         <!-- Logo + name -->
         <div class="flex items-center space-x-4">
-          <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-30 h-28 object-contain" />
+          <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-16 h-14 sm:w-30 sm:h-28 object-contain" />
         </div>
 
         <!-- User info + logout -->
-        <div class="flex items-center space-x-4">
-          <div class="text-right">
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <div class="text-right hidden sm:block">
             <p class="text-white text-sm font-medium">{{ profile?.username }}</p>
             <p class="text-xs text-gray-400 capitalize">{{ profile?.role }}</p>
           </div>
           <div
-            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-900 font-bold text-xs"
+            class="w-9 h-9 rounded-full flex items-center justify-center text-gray-900 font-bold text-xs flex-shrink-0"
             style="background:linear-gradient(135deg,#d4a017,#b8860b);"
           >
             {{ profile?.username?.substring(0, 2).toUpperCase() }}
           </div>
           <button
             @click="logout"
-            class="text-xs text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 px-3 py-1.5 rounded-md transition"
+            class="text-xs text-gray-400 hover:text-white border border-gray-600 hover:border-gray-400 px-2.5 sm:px-3 py-1.5 rounded-md transition whitespace-nowrap"
           >
             Logout
           </button>
@@ -57,7 +57,7 @@ onMounted(async () => {
     </header>
 
     <!-- Page Content -->
-    <main class="flex-grow p-8 overflow-auto">
+    <main class="flex-grow p-4 sm:p-8 overflow-auto">
 
       <div class="mb-6">
         <h2 class="text-2xl font-bold text-gray-800">Project Monitoring</h2>

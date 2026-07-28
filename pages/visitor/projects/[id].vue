@@ -20,21 +20,21 @@ onMounted(async () => {
     <header class="relative overflow-hidden flex-shrink-0" style="background:#0d0d0d; min-height:80px;">
       <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('/mine-design.jpeg'); opacity:0.2;"></div>
       <div class="absolute inset-0" style="background:linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%);"></div>
-      <div class="relative z-10 flex items-center justify-between px-8 py-4">
-        <div class="flex items-center space-x-4">
-          <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-30 h-28 object-contain" />
+      <div class="relative z-10 flex items-center justify-between flex-wrap gap-y-2 px-4 sm:px-8 py-3 sm:py-4">
+        <div class="flex items-center space-x-3 sm:space-x-4">
+          <img src="/sidebar-logo.png" alt="Zam Zam Gold Mine" class="w-16 h-14 sm:w-30 sm:h-28 object-contain" />
           <div>
-            <h1 class="text-white font-bold text-lg leading-tight">Zam Zam Gold Mine</h1>
+            <h1 class="text-white font-bold text-base sm:text-lg leading-tight">Zam Zam Gold Mine</h1>
             <p class="text-xs uppercase tracking-widest" style="color:#d4a017;">Management System</p>
           </div>
         </div>
-        <NuxtLink to="/visitor" class="text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-400 px-3 py-1.5 rounded-md transition">
+        <NuxtLink to="/visitor" class="text-xs sm:text-sm text-gray-300 hover:text-white border border-gray-600 hover:border-gray-400 px-2.5 sm:px-3 py-1.5 rounded-md transition whitespace-nowrap">
           ← Back to Projects
         </NuxtLink>
       </div>
     </header>
 
-    <main class="flex-grow p-8 overflow-auto">
+    <main class="flex-grow p-4 sm:p-8 overflow-auto">
       <div v-if="loading" class="flex justify-center py-20">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-800"></div>
       </div>
@@ -46,14 +46,14 @@ onMounted(async () => {
 
       <div v-else-if="project">
         <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-800">{{ project.name }}</h2>
+        <div class="flex items-center justify-between flex-wrap gap-y-2 mb-6">
+          <div class="min-w-0">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800 truncate">{{ project.name }}</h2>
             <p class="text-sm text-gray-500 mt-1">
               Assigned to: <span class="font-medium text-gray-700">{{ project.assigned_user?.username || 'Unassigned' }}</span>
             </p>
           </div>
-          <div class="text-right">
+          <div class="text-right flex-shrink-0">
             <p class="text-xs text-gray-400 uppercase font-semibold">Created</p>
             <p class="text-sm text-gray-600">{{ new Date(project.created_at).toLocaleDateString() }}</p>
           </div>
@@ -94,6 +94,12 @@ onMounted(async () => {
         <div class="mt-8">
           <h3 class="text-lg font-bold text-gray-800 mb-4">Plant Module</h3>
           <UserPlantModule :projectId="project.id" :readonly="true" />
+        </div>
+
+        <!-- Read-only Diesel Module -->
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Diesel Module</h3>
+          <UserDieselModule :projectId="project.id" :readonly="true" />
         </div>
       </div>
     </main>

@@ -99,6 +99,7 @@ CREATE TABLE excavators (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   owner_name TEXT NOT NULL,
+  owner_mobile_number TEXT,
   picture_url TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );

@@ -83,6 +83,18 @@ onMounted(async () => {
           <h3 class="text-lg font-bold text-gray-800 mb-4">Truck Module</h3>
           <UserTruckModule :projectId="project.id" :readonly="true" />
         </div>
+
+        <!-- Read-only Excavator Machine Module -->
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Excavator Machine Module</h3>
+          <UserExcavatorModule :projectId="project.id" :readonly="true" />
+        </div>
+
+        <!-- Read-only Plant Module -->
+        <div class="mt-8">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">Plant Module</h3>
+          <UserPlantModule :projectId="project.id" :readonly="true" />
+        </div>
       </div>
     </main>
   </div>

@@ -78,6 +78,18 @@ onMounted(async () => {
         <h3 class="text-lg font-bold text-gray-800 mb-4">Truck Module</h3>
         <UserTruckModule :projectId="project.id" />
       </div>
+
+      <!-- Full interactive excavator module for admin -->
+      <div class="mt-8">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Excavator Machine Module</h3>
+        <UserExcavatorModule :projectId="project.id" />
+      </div>
+
+      <!-- Full interactive plant module for admin -->
+      <div class="mt-8">
+        <h3 class="text-lg font-bold text-gray-800 mb-4">Plant Module</h3>
+        <UserPlantModule :projectId="project.id" />
+      </div>
     </div>
   </div>
 </template>

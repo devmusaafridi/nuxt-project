@@ -200,6 +200,32 @@ const saveDriver = async () => {
   }
 }
 
+// ── Driver History modal ──────────────────────────────────
+const showHistoryModal = ref(false)
+const loadingHistory = ref(false)
+const historyExcavator = ref(null)
+const driverHistory = ref([])
+
+const formatDateTime = (iso) => {
+  return new Date(iso).toLocaleString(undefined, {
+    year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+  })
+}
+
+const openHistoryModal = async (excavator) => {
+  historyExcavator.value = excavator
+  showHistoryModal.value = true
+  loadingHistory.value = true
+  driverHistory.value = []
+  try {
+    driverHistory.value = await $fetch('/api/excavator-drivers', { query: { excavator_id: excavator.id } })
+  } catch (err) {
+    alert(err?.data?.message ?? err?.message ?? 'Failed to load driver history')
+  } finally {
+    loadingHistory.value = false
+  }
+}
+
 // ── Working Session: Add modal ────────────────────────────
 const showSessionModal = ref(false)
 const savingSession = ref(false)
@@ -313,7 +339,7 @@ const deleteSession = async (session) => {
             <div class="flex items-center justify-between mb-2">
               <div class="min-w-0 mr-3">
                 <p class="text-sm font-bold text-gray-800 truncate">{{ excavator.owner_name }}</p>
-                <p class="text-xs text-gray-500">{{ excavator.driver?.driver_name || 'No driver' }}</p>
+                <p class="text-xs text-gray-500">{{ sessionsFor(excavator.id)[0]?.driver_name || excavator.driver?.driver_name || 'No driver' }}</p>
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
                 <span class="text-xs font-semibold text-gray-600">{{ totalHoursFor(excavator.id).toFixed(1) }} hrs</span>
@@ -399,13 +425,21 @@ const deleteSession = async (session) => {
                   <p class="text-xs text-gray-400">{{ excavator.driver?.mobile_number || '' }}</p>
                 </div>
               </div>
-              <button
-                v-if="!readonly"
-                @click="openDriverModal(excavator)"
-                class="text-xs text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap ml-2"
-              >
-                {{ excavator.driver ? 'Replace Driver' : 'Assign Driver' }}
-              </button>
+              <div class="flex items-center gap-3 flex-shrink-0 ml-2">
+                <button
+                  @click="openHistoryModal(excavator)"
+                  class="text-xs text-gray-500 hover:text-gray-700 font-medium whitespace-nowrap"
+                >
+                  History
+                </button>
+                <button
+                  v-if="!readonly"
+                  @click="openDriverModal(excavator)"
+                  class="text-xs text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                >
+                  {{ excavator.driver ? 'Replace Driver' : 'Assign Driver' }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -510,6 +544,55 @@ const deleteSession = async (session) => {
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Driver History Modal -->
+    <div v-if="showHistoryModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div class="bg-white rounded-lg p-6 max-w-md w-full max-h-[80vh] flex flex-col">
+        <h3 class="text-lg font-bold mb-1">Driver History</h3>
+        <p class="text-xs text-gray-500 mb-4">Excavator owner: {{ historyExcavator?.owner_name }}</p>
+
+        <div v-if="loadingHistory" class="flex justify-center py-8">
+          <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-yellow-600"></div>
+        </div>
+
+        <div v-else-if="driverHistory.length === 0" class="text-center py-8 text-gray-400 text-sm italic">
+          No drivers have been assigned yet.
+        </div>
+
+        <div v-else class="space-y-2 overflow-y-auto">
+          <div
+            v-for="record in driverHistory"
+            :key="record.id"
+            class="flex items-center justify-between p-3 rounded-md border"
+            :class="record.is_active ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'"
+          >
+            <div class="flex items-center space-x-3 min-w-0">
+              <img
+                v-if="record.picture_url"
+                :src="record.picture_url"
+                @click="openPreview(record.picture_url)"
+                class="w-9 h-9 rounded-full object-cover flex-shrink-0 border border-gray-200 cursor-pointer hover:opacity-80 transition"
+              />
+              <div v-else class="w-9 h-9 rounded-full bg-gray-100 flex-shrink-0 flex items-center justify-center text-gray-400 text-sm">👤</div>
+              <div class="min-w-0">
+                <p class="text-sm font-semibold text-gray-800 truncate">{{ record.driver_name }}</p>
+                <p class="text-xs text-gray-400">{{ record.mobile_number || '—' }} · {{ formatDateTime(record.created_at) }}</p>
+              </div>
+            </div>
+            <span
+              class="text-xs px-2 py-0.5 rounded border font-medium flex-shrink-0 ml-2"
+              :class="record.is_active ? 'bg-green-100 text-green-700 border-green-200' : 'bg-gray-100 text-gray-500 border-gray-200'"
+            >
+              {{ record.is_active ? 'Active' : 'Past' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="flex justify-end pt-4 mt-2 border-t border-gray-100">
+          <button @click="showHistoryModal = false" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded text-sm">Close</button>
+        </div>
       </div>
     </div>
 

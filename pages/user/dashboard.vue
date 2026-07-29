@@ -142,6 +142,24 @@ const handleModuleSelect = (id) => {
       <UserDieselModule v-else :projectId="projects[0].id" />
     </div>
 
+    <!-- Maintenance module -->
+    <div v-else-if="activeModule === 'maintenance'">
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserMaintenanceModule v-else :projectId="projects[0].id" />
+    </div>
+
+    <!-- Others module -->
+    <div v-else-if="activeModule === 'others'">
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserOthersModule v-else :projectId="projects[0].id" />
+    </div>
+
     <!-- Other modules -->
     <div v-else class="flex flex-col items-center justify-center py-20 text-gray-400">
       <div class="text-6xl mb-4">🏗️</div>

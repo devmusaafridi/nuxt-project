@@ -181,6 +181,7 @@ CREATE TABLE other_expenses (
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   type TEXT CHECK (type IN ('food', 'police', 'transport', 'miscellaneous')) NOT NULL,
   amount DECIMAL NOT NULL,
+  description TEXT,
   date DATE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );

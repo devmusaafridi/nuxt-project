@@ -160,6 +160,33 @@ const handleModuleSelect = (id) => {
       <UserOthersModule v-else :projectId="projects[0].id" />
     </div>
 
+    <!-- Gold module -->
+    <div v-else-if="activeModule === 'gold'">
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserGoldModule v-else :projectId="projects[0].id" />
+    </div>
+
+    <!-- Project Capital Value module -->
+    <div v-else-if="activeModule === 'capital'">
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserCapitalModule v-else :projectId="projects[0].id" :capitalAllocated="projects[0].capital_allocated" />
+    </div>
+
+    <!-- Reports module -->
+    <div v-else-if="activeModule === 'reports'">
+      <div v-if="!projects.length" class="flex flex-col items-center justify-center py-20 text-gray-400">
+        <p class="text-lg font-medium">No project assigned yet.</p>
+        <p class="text-sm">Please contact your administrator.</p>
+      </div>
+      <UserReportsModule v-else :projectId="projects[0].id" />
+    </div>
+
     <!-- Other modules -->
     <div v-else class="flex flex-col items-center justify-center py-20 text-gray-400">
       <div class="text-6xl mb-4">🏗️</div>

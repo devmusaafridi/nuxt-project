@@ -4,8 +4,10 @@ export default defineEventHandler(async (event) => {
   const supabaseUrl = process.env.SUPABASE_URL!
   const serviceKey = process.env.SUPABASE_SERVICE_KEY!
 
+  const dateFilter = date ? `&date=eq.${date}` : ''
+
   const response = await fetch(
-    `${supabaseUrl}/rest/v1/plant_working_hours?select=id,plant_id,date,start_time,end_time,plants!inner(project_id)&plants.project_id=eq.${projectId}&date=eq.${date}&order=start_time.asc`,
+    `${supabaseUrl}/rest/v1/plant_working_hours?select=id,plant_id,date,start_time,end_time,plants!inner(project_id)&plants.project_id=eq.${projectId}${dateFilter}&order=start_time.asc`,
     {
       headers: {
         'apikey': serviceKey,

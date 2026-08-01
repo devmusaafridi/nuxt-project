@@ -86,7 +86,7 @@ const uploadPhoto = async (file) => {
 const showExcavatorModal = ref(false)
 const excavatorModalMode = ref('add')
 const savingExcavator = ref(false)
-const excavatorForm = reactive({ id: '', owner_name: '', owner_mobile_number: '', picture_url: '' })
+const excavatorForm = reactive({ id: '', owner_name: '', owner_mobile_number: '', picture_url: '', hourly_rate: '' })
 const excavatorPictureFile = ref(null)
 
 const openAddExcavator = () => {
@@ -95,6 +95,7 @@ const openAddExcavator = () => {
   excavatorForm.owner_name = ''
   excavatorForm.owner_mobile_number = ''
   excavatorForm.picture_url = ''
+  excavatorForm.hourly_rate = ''
   excavatorPictureFile.value = null
   showExcavatorModal.value = true
 }
@@ -105,6 +106,7 @@ const openEditExcavator = (excavator) => {
   excavatorForm.owner_name = excavator.owner_name
   excavatorForm.owner_mobile_number = excavator.owner_mobile_number || ''
   excavatorForm.picture_url = excavator.picture_url || ''
+  excavatorForm.hourly_rate = excavator.hourly_rate || ''
   excavatorPictureFile.value = null
   showExcavatorModal.value = true
 }
@@ -124,7 +126,8 @@ const saveExcavator = async () => {
           project_id: props.projectId,
           owner_name: excavatorForm.owner_name,
           owner_mobile_number: excavatorForm.owner_mobile_number,
-          picture_url: pictureUrl
+          picture_url: pictureUrl,
+          hourly_rate: excavatorForm.hourly_rate
         }
       })
     } else {
@@ -133,7 +136,8 @@ const saveExcavator = async () => {
         body: {
           owner_name: excavatorForm.owner_name,
           owner_mobile_number: excavatorForm.owner_mobile_number,
-          picture_url: pictureUrl
+          picture_url: pictureUrl,
+          hourly_rate: excavatorForm.hourly_rate
         }
       })
     }
@@ -403,6 +407,7 @@ const deleteSession = async (session) => {
                 <div class="min-w-0">
                   <p class="text-sm font-bold text-gray-800 truncate">{{ excavator.owner_name }}</p>
                   <p class="text-xs text-gray-500">{{ excavator.owner_mobile_number || '—' }}</p>
+                  <p class="text-xs text-gray-400">Rs. {{ Number(excavator.hourly_rate || 0).toLocaleString() }}/hr</p>
                 </div>
               </div>
               <div v-if="!readonly" class="flex space-x-3 flex-shrink-0">
@@ -458,6 +463,10 @@ const deleteSession = async (session) => {
           <div>
             <label class="block text-sm font-medium text-gray-700">Owner Mobile Number</label>
             <input v-model="excavatorForm.owner_mobile_number" type="text" class="mt-1 block w-full border rounded p-2 text-sm" placeholder="Optional" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Hourly Rate (Rs.)</label>
+            <input v-model="excavatorForm.hourly_rate" type="number" min="0" class="mt-1 block w-full border rounded p-2 text-sm" placeholder="0" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Excavator Picture</label>

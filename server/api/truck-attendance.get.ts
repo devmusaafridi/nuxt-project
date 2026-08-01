@@ -8,8 +8,10 @@ export default defineEventHandler(async (event) => {
     'Authorization': `Bearer ${serviceKey}`
   }
 
+  const dateFilter = date ? `&date=eq.${date}` : ''
+
   const response = await fetch(
-    `${supabaseUrl}/rest/v1/truck_attendance?select=id,truck_id,date,present,trucks!inner(project_id)&trucks.project_id=eq.${projectId}&date=eq.${date}`,
+    `${supabaseUrl}/rest/v1/truck_attendance?select=id,truck_id,date,present,trucks!inner(project_id)&trucks.project_id=eq.${projectId}${dateFilter}`,
     { headers }
   )
 

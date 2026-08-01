@@ -71,12 +71,13 @@ watch(selectedDate, () => {
 const showPlantModal = ref(false)
 const plantModalMode = ref('add')
 const savingPlant = ref(false)
-const plantForm = reactive({ id: '', name: '' })
+const plantForm = reactive({ id: '', name: '', hourly_rate: '' })
 
 const openAddPlant = () => {
   plantModalMode.value = 'add'
   plantForm.id = ''
   plantForm.name = ''
+  plantForm.hourly_rate = ''
   showPlantModal.value = true
 }
 
@@ -84,6 +85,7 @@ const openEditPlant = (plant) => {
   plantModalMode.value = 'edit'
   plantForm.id = plant.id
   plantForm.name = plant.name
+  plantForm.hourly_rate = plant.hourly_rate || ''
   showPlantModal.value = true
 }
 
@@ -93,12 +95,12 @@ const savePlant = async () => {
     if (plantModalMode.value === 'add') {
       await $fetch('/api/plants', {
         method: 'POST',
-        body: { project_id: props.projectId, name: plantForm.name }
+        body: { project_id: props.projectId, name: plantForm.name, hourly_rate: plantForm.hourly_rate }
       })
     } else {
       await $fetch(`/api/plant/${plantForm.id}`, {
         method: 'PATCH',
-        body: { name: plantForm.name }
+        body: { name: plantForm.name, hourly_rate: plantForm.hourly_rate }
       })
     }
     showPlantModal.value = false
@@ -284,7 +286,10 @@ const deleteSession = async (session) => {
           <div v-for="plant in plants" :key="plant.id" class="flex items-center justify-between border border-gray-100 rounded-lg p-3">
             <div class="flex items-center space-x-3 min-w-0">
               <div class="w-10 h-10 rounded bg-gray-100 flex-shrink-0 flex items-center justify-center text-gray-400 text-lg">🏭</div>
-              <p class="text-sm font-bold text-gray-800 truncate">{{ plant.name }}</p>
+              <div class="min-w-0">
+                <p class="text-sm font-bold text-gray-800 truncate">{{ plant.name }}</p>
+                <p class="text-xs text-gray-400">Rs. {{ Number(plant.hourly_rate || 0).toLocaleString() }}/hr</p>
+              </div>
             </div>
             <div v-if="!readonly" class="flex space-x-3 flex-shrink-0">
               <button @click="openEditPlant(plant)" class="text-yellow-600 hover:text-yellow-800 text-xs font-medium">Edit</button>
@@ -303,6 +308,10 @@ const deleteSession = async (session) => {
           <div>
             <label class="block text-sm font-medium text-gray-700">Plant Name <span class="text-red-500">*</span></label>
             <input v-model="plantForm.name" type="text" required class="mt-1 block w-full border rounded p-2 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Hourly Rate (Rs.)</label>
+            <input v-model="plantForm.hourly_rate" type="number" min="0" class="mt-1 block w-full border rounded p-2 text-sm" placeholder="0" />
           </div>
           <div class="flex justify-end space-x-3 pt-2">
             <button @click="showPlantModal = false" type="button" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded text-sm">Cancel</button>

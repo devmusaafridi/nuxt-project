@@ -69,6 +69,7 @@ CREATE TABLE trucks (
   owner_name TEXT NOT NULL,
   owner_mobile_number TEXT,
   picture_url TEXT,
+  monthly_salary DECIMAL DEFAULT 0,
   created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
 );
@@ -101,6 +102,7 @@ CREATE TABLE excavators (
   owner_name TEXT NOT NULL,
   owner_mobile_number TEXT,
   picture_url TEXT,
+  hourly_rate DECIMAL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
@@ -130,6 +132,7 @@ CREATE TABLE plants (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
   name TEXT NOT NULL,
+  hourly_rate DECIMAL DEFAULT 0,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
@@ -205,6 +208,17 @@ CREATE TABLE capital_investments (
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
 );
 
+-- Payments (paid-so-far ledger for workers, trucks, excavators, plants)
+CREATE TABLE payments (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
+  target_type TEXT CHECK (target_type IN ('worker', 'truck', 'excavator', 'plant')) NOT NULL,
+  target_id UUID NOT NULL,
+  amount DECIMAL NOT NULL,
+  date DATE NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL
+);
+
 -- Row Level Security (RLS) Policies
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
@@ -224,6 +238,7 @@ ALTER TABLE maintenance ENABLE ROW LEVEL SECURITY;
 ALTER TABLE other_expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE gold_production ENABLE ROW LEVEL SECURITY;
 ALTER TABLE capital_investments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE payments ENABLE ROW LEVEL SECURITY;
 
 -- Super Admin Policy (Can do everything)
 CREATE POLICY super_admin_all ON profiles FOR ALL TO authenticated USING (

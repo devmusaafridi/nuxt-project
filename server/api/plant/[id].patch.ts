@@ -1,9 +1,12 @@
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
-  const { name } = await readBody(event)
+  const { name, hourly_rate } = await readBody(event)
 
   const supabaseUrl = process.env.SUPABASE_URL!
   const serviceKey = process.env.SUPABASE_SERVICE_KEY!
+
+  const payload: any = { name }
+  if (hourly_rate !== undefined) payload.hourly_rate = Number(hourly_rate) || 0
 
   const response = await fetch(`${supabaseUrl}/rest/v1/plants?id=eq.${id}`, {
     method: 'PATCH',
@@ -13,7 +16,7 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${serviceKey}`,
       'Prefer': 'return=minimal'
     },
-    body: JSON.stringify({ name })
+    body: JSON.stringify(payload)
   })
 
   if (!response.ok) {

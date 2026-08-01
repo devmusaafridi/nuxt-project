@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const { project_id, owner_name, owner_mobile_number, picture_url } = await readBody(event)
+  const { project_id, owner_name, owner_mobile_number, picture_url, monthly_salary } = await readBody(event)
 
   const supabaseUrl = process.env.SUPABASE_URL!
   const serviceKey = process.env.SUPABASE_SERVICE_KEY!
@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
       'Authorization': `Bearer ${serviceKey}`,
       'Prefer': 'return=representation'
     },
-    body: JSON.stringify({ project_id, owner_name, owner_mobile_number, picture_url })
+    body: JSON.stringify({ project_id, owner_name, owner_mobile_number, picture_url, monthly_salary: Number(monthly_salary) || 0 })
   })
 
   if (!response.ok) {

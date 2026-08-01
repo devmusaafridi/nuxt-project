@@ -1,13 +1,11 @@
 export default defineEventHandler(async (event) => {
-  const { projectId, date } = getQuery(event)
+  const { projectId } = getQuery(event)
 
   const supabaseUrl = process.env.SUPABASE_URL!
   const serviceKey = process.env.SUPABASE_SERVICE_KEY!
 
-  const dateFilter = date ? `&date=eq.${date}` : ''
-
   const response = await fetch(
-    `${supabaseUrl}/rest/v1/worker_attendance?select=id,worker_id,date,status,workers!inner(project_id)&workers.project_id=eq.${projectId}${dateFilter}`,
+    `${supabaseUrl}/rest/v1/gold_production?project_id=eq.${projectId}&order=date.desc`,
     {
       headers: {
         'apikey': serviceKey,
@@ -18,7 +16,7 @@ export default defineEventHandler(async (event) => {
 
   if (!response.ok) {
     const err = await response.json().catch(() => ({}))
-    throw createError({ statusCode: response.status, message: err?.message || 'Failed to fetch attendance' })
+    throw createError({ statusCode: response.status, message: err?.message || 'Failed to fetch gold production' })
   }
 
   return response.json()

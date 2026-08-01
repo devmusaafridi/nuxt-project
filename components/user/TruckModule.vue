@@ -97,7 +97,7 @@ const uploadPhoto = async (file) => {
 const showTruckModal = ref(false)
 const truckModalMode = ref('add')
 const savingTruck = ref(false)
-const truckForm = reactive({ id: '', owner_name: '', owner_mobile_number: '', picture_url: '' })
+const truckForm = reactive({ id: '', owner_name: '', owner_mobile_number: '', picture_url: '', monthly_salary: '' })
 const truckPictureFile = ref(null)
 
 const openAddTruck = () => {
@@ -106,6 +106,7 @@ const openAddTruck = () => {
   truckForm.owner_name = ''
   truckForm.owner_mobile_number = ''
   truckForm.picture_url = ''
+  truckForm.monthly_salary = ''
   truckPictureFile.value = null
   showTruckModal.value = true
 }
@@ -116,6 +117,7 @@ const openEditTruck = (truck) => {
   truckForm.owner_name = truck.owner_name
   truckForm.owner_mobile_number = truck.owner_mobile_number || ''
   truckForm.picture_url = truck.picture_url || ''
+  truckForm.monthly_salary = truck.monthly_salary || ''
   truckPictureFile.value = null
   showTruckModal.value = true
 }
@@ -135,7 +137,8 @@ const saveTruck = async () => {
           project_id: props.projectId,
           owner_name: truckForm.owner_name,
           owner_mobile_number: truckForm.owner_mobile_number,
-          picture_url: pictureUrl
+          picture_url: pictureUrl,
+          monthly_salary: truckForm.monthly_salary
         }
       })
     } else {
@@ -144,7 +147,8 @@ const saveTruck = async () => {
         body: {
           owner_name: truckForm.owner_name,
           owner_mobile_number: truckForm.owner_mobile_number,
-          picture_url: pictureUrl
+          picture_url: pictureUrl,
+          monthly_salary: truckForm.monthly_salary
         }
       })
     }
@@ -378,6 +382,7 @@ const openHistoryModal = async (truck) => {
                 <div class="min-w-0">
                   <p class="text-sm font-bold text-gray-800 truncate">{{ truck.owner_name }}</p>
                   <p class="text-xs text-gray-500">{{ truck.owner_mobile_number || '—' }}</p>
+                  <p class="text-xs text-gray-400">Rs. {{ Number(truck.monthly_salary || 0).toLocaleString() }}/month</p>
                 </div>
               </div>
               <div v-if="!readonly" class="flex space-x-3 flex-shrink-0">
@@ -433,6 +438,10 @@ const openHistoryModal = async (truck) => {
           <div>
             <label class="block text-sm font-medium text-gray-700">Owner Mobile Number</label>
             <input v-model="truckForm.owner_mobile_number" type="text" class="mt-1 block w-full border rounded p-2 text-sm" placeholder="Optional" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Monthly Salary (Rs.)</label>
+            <input v-model="truckForm.monthly_salary" type="number" min="0" class="mt-1 block w-full border rounded p-2 text-sm" placeholder="0" />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700">Truck Picture</label>
